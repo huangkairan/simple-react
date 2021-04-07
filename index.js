@@ -23,16 +23,29 @@ function createTextElement (text) {
 }
 
 const myReact = {
-  createElement
+  createElement,
+  render
 }
 
-// const element = myReact.createElement(
-//   "div",
-//   { id: "foo" },
-//   myReact.createElement("a", null, "bar"),
-//   myReact.createElement("b")
-// )
+function render (element, container) {
+  const dom = 
+    element.type === 'TEXT_ELEMENT'
+      ? document.createTextNode('')
+      : document.createElement(element.type)
 
+  const isProperty = key => key !== 'children'
+  Object.keys(element.props)
+    .filter(isProperty)
+    .forEach(name=>{
+      dom[name] = element.props[name]
+    })
+  ​element.props.children.forEach(child =>
+    render(child, dom)
+  )
+  container.appendChild(dom)
+}
+
+/** @jsx myReact.createElement */
 const element = (
   <div id="foo">
     <a>bar</a>
@@ -41,4 +54,4 @@ const element = (
 )
 
 const container = document.getElementById("root")
-ReactDOM.render(element, container)
+myReact.render(element, container)
