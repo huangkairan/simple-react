@@ -22,11 +22,6 @@ function createTextElement (text) {
   }
 }
 
-const myReact = {
-  createElement,
-  render
-}
-
 function createDom (fiber) {
   const dom = 
     element.type === 'TEXT_ELEMENT'
@@ -198,9 +193,44 @@ function performUnitOfWork(fiber) {
   }
 }
 
+let workInProgressFiber = null
+let hookIndex = null
 function updateFunctionComponent(fiber) {
+  workInProgressFiber = fiber
+  hookIndex = 0
+  workInProgressFiber.hooks = []
   const children = [fiber.type(fiber.props)]
   reconcileChildren(fiber, children)
+}
+
+function useState(initial) {
+  const oldHook =
+    workInProgressFiber.alternate &&
+    workInProgressFiber.alternate.hooks &&
+    workInProgressFiber.alternate.hooks[hookIndex]
+  const hook = {
+    state: oldHook ? oldHook.state : initial,
+    queue: []
+  }
+  
+  const actions = oldHook ? oldHook.queue : []
+  actions.forEach(action => {
+    hook.state = action(hook.state)
+  })
+  
+  ​const setState = action => {
+    hook.queue.push(action)
+    workInProgressRoot = {
+      dom: currentRoot.dom,
+      props: currentRoot.props,
+      alternate: currentRoot,
+    }
+    nextUnitOfWork = workInProgressRoot
+    deletions = []
+  }
+  workInProgressFiber.hooks.push(hook)
+  hookIndex++
+  return [hook.state, setState]
 }
 
 function updateHostComponent(fiber) {
@@ -266,11 +296,22 @@ function reconcileChildren(workInProgressRoot, elements) {
   }
 }
 
-/** @jsx myReact.createElement */
-function App(props) {
-  return <h1>Hi {props.name}</h1>
+const myReact = {
+  createElement,
+  render,
+  useState
 }
-const element = <App name="foo" />
+
+/** @jsx myReact.createElement */
+function Counter() {
+  const [state, setState] = Didact.useState(1)
+  return (
+    <h1 onClick={() => setState(c => c + 1)}>
+      Count: {state}
+    </h1>
+  )
+}
+const element = <Counter/>
 
 const container = document.getElementById("root")
 myReact.render(element, container)
