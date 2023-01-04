@@ -12,14 +12,12 @@ importers:
       eslint: ^8.28.0
       eslint-config-prettier: ^8.5.0
       eslint-plugin-prettier: ^4.2.1
-      eslint-plugin,: link:@typescript-eslint/eslint-plugin,
       husky: ^8.0.2
       prettier: ^2.8.0
       rollup: ^3.5.0
       typescript: ^4.9.3
     dependencies:
       '@typescript-eslint/parser': registry.npmmirror.com/@typescript-eslint/parser/5.44.0_hsf322ms6xhhd4b5ne6lb74y4a
-      eslint-plugin,: link:@typescript-eslint/eslint-plugin,
     devDependencies:
       '@commitlint/cli': registry.npmmirror.com/@commitlint/cli/17.3.0
       '@commitlint/config-conventional': registry.npmmirror.com/@commitlint/config-conventional/17.3.0
