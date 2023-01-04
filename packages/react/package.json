@@ -1,0 +1,12 @@
+{
+  "name": "react",
+  "version": "1.0.0",
+  "description": "react core",
+  "module": "index.js",
+  "dependencies": {
+    "shared": "workspace:*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
